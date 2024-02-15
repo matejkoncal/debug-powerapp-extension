@@ -1,0 +1,87 @@
+{
+  "name": "cookies-sender",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "cookies-sender/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/cookies-sender",
+        "index": "cookies-sender/src/index.html",
+        "baseHref": "/",
+        "main": "cookies-sender/src/main.tsx",
+        "tsConfig": "cookies-sender/tsconfig.app.json",
+        "assets": [
+          "cookies-sender/src/favicon.ico",
+          "cookies-sender/src/assets",
+          "cookies-sender/src/manifest.json"
+        ],
+        "styles": ["cookies-sender/src/styles.scss"],
+        "scripts": [],
+        "webpackConfig": "cookies-sender/webpack.config.js"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "cookies-sender/src/environments/environment.ts",
+              "with": "cookies-sender/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@spaceribs/nx-web-ext:serve",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "cookies-sender:build",
+        "hmr": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "cookies-sender:build:development"
+        },
+        "production": {
+          "buildTarget": "cookies-sender:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "cookies-sender/jest.config.ts"
+      }
+    },
+    "package": {
+      "executor": "@spaceribs/nx-web-ext:package",
+      "dependsOn": ["build"],
+      "options": {
+        "sourceDir": "dist/cookies-sender",
+        "artifactsDir": "/Users/matejkoncal/workspaces/debug-powerapp-extension/dist"
+      }
+    }
+  },
+  "tags": []
+}
